@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#181c1e">
+  <meta name="description" content="An interactive, real-time 3D love letter to the Sega Dreamcast. Explore its hardware, a playable 48×32 VMU, homebrew history and the art of doing more with less.">
+  <title>Dreamcast · Never stop dreaming</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./assets/grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+</head>
+<body class="dark">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <canvas id="world" aria-label="Interactive 3D Dreamcast exhibit"></canvas>
+  <div id="graphics-fallback" hidden><span class="fallback-swirl">◎</span><p>3D rendering is unavailable in this browser.<br>The archive and interactive exhibits are still here.</p></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="crt" aria-hidden="true"></div>
+
+  <section id="boot" aria-label="Dreamcast boot sequence">
+    <div class="boot-top mono"><span>AN INDEPENDENT LOVE LETTER</span><span>HKT-3000 / 1998</span></div>
+    <div class="boot-intro" id="boot-intro">
+      <span class="eyebrow">SOME THINGS NEVER GET OLD.</span>
+      <h1>Never stop<br><em>dreaming.</em></h1>
+      <p>A machine from 1998. A feeling that never left.</p>
+      <button class="primary power" id="power"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v10M6 5a9 9 0 1 0 12 0"/></svg><span>Power on</span><span class="key">↵</span></button>
+      <button class="text-button" id="silent-enter">Enter without sound ↗</button>
+      <span class="boot-audio mono" id="asset-status">LOADING THE DREAM…</span>
+    </div>
+
+    <button id="skip-boot" class="pill mono" hidden>Skip intro <span>ESC</span></button>
+    <div class="boot-bottom mono"><span>REAL-TIME 3D. REAL MEMORIES.</span><span>A TRIBUTE BY FELIPE</span></div>
+  </section>
+
+  <div id="experience" hidden>
+    <header>
+      <button class="brand" data-view="home" aria-label="Dreamcast tribute home"><svg class="swirl" viewBox="0 0 100 100" aria-hidden="true"><path id="brand-spiral"/></svg><span>Dreamcast<small>RE:BOOT / AN INTERACTIVE TRIBUTE</small></span></button>
+      <div class="header-right"><span class="live mono"><i></i>LIVE RENDER</span><button class="icon-button" id="sound-toggle" aria-label="Enable sound" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 5 6 9H3v6h3l5 4zM15 8c3 2 3 6 0 8M18 5c5 4 5 10 0 14"/><path id="sound-slash" d="m3 3 18 18"/></svg></button><button class="icon-button" id="settings-open" aria-label="Open display settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--paper)"/><circle cx="15" cy="17" r="3" fill="var(--paper)"/></svg></button></div>
+    </header>
+
+    <div class="scene-meta mono"><span id="scene-number">01 / THE DREAM</span><span id="scene-date">JAPAN · 27 NOV 1998</span></div>
+    <div id="orbit-zone" tabindex="0" role="img" aria-label="Drag to rotate the 3D model. Scroll to zoom. Use arrow keys to rotate."></div>
+    <div id="bios-labels" hidden></div>
+    <div id="hotspots" hidden></div>
+
+    <main id="content">
+      <section class="page active" data-page="home" aria-label="Dreamcast anniversary">
+        <span class="eyebrow"><span class="orange-line"></span>THE FUTURE ARRIVED EARLY.</span>
+        <h1>Ahead of<br>its <em>time.</em></h1>
+        <p class="lead">Some consoles play games.<br>This one started a dream.</p>
+        <p class="body-copy">A real-time tribute to Sega’s last console.<br>Made for the people who still hear the startup.</p>
+        <div class="actions"><button class="primary" data-view="hardware">Explore the machine <span>↗</span></button><button class="text-button" data-view="bios">Enter the BIOS <span>→</span></button></div>
+        <div class="anniversary">
+          <div class="anniversary-head mono"><span id="birthday-title">HAPPY BIRTHDAY, DREAMCAST.</span><select id="region" aria-label="Launch region"><option value="jp">JP / 1998.11.27</option><option value="us">US / 1999.09.09</option><option value="eu">EU / 1999.10.14</option></select></div>
+          <div class="age"><div><strong id="age-years">—</strong><span>YEARS</span></div><b>:</b><div><strong id="age-days">—</strong><span>DAYS</span></div><b>:</b><div><strong id="age-hours">—</strong><span>HOURS</span></div><b>:</b><div><strong id="age-minutes">—</strong><span>MIN</span></div><b>:</b><div><strong id="age-seconds">—</strong><span>SEC</span></div></div>
+          <div class="anniversary-foot mono"><span id="days-total"></span><span id="next-birthday"></span></div>
+        </div>
+      </section>
+
+      <section class="page" data-page="bios" hidden aria-label="BIOS menu">
+        <span class="eyebrow">02 / THE SYSTEM MENU</span><h1 class="section-title">Welcome<br><em>back.</em></h1>
+        <p class="lead">Four floating icons.<br>A whole world waiting inside.</p><p class="body-copy">The familiar BIOS, reimagined in live 3D. Select an orb, or use the arrow keys and Enter.</p>
+        <div class="bios-selection"><span class="mono" id="bios-type">01 / PLAY</span><h2 id="bios-title">Meet the machine.</h2><p id="bios-description">Lift the shell. Follow the silicon. Explore the little box that brought the arcade home.</p><button class="primary" id="bios-confirm">Select <span>↵</span></button></div>
+        <span class="note mono">A BROWSER RECREATION · NO BIOS CODE IS EXECUTED</span>
+      </section>
+
+      <section class="page" data-page="hardware" hidden aria-label="Hardware inspector">
+        <span class="eyebrow">03 / UNDER THE SHELL</span><h1 class="section-title">Small box.<br><em>Big ideas.</em></h1>
+        <p class="body-copy">One elegant little machine. Drag to inspect it, then separate the layers.</p>
+        <div class="segmented" aria-label="Assembly mode"><button class="selected" id="assembled" aria-pressed="true">Assembled</button><button id="exploded" aria-pressed="false">Exploded view ↗</button></div>
+        <div class="spec-list" id="spec-list"></div>
+        <div class="selected-spec" id="selected-spec"><span class="mono">HITACHI / SH7750</span><p>A 32-bit RISC CPU with vector-friendly floating-point instructions. The “128-bit” label described its graphics math, not a 128-bit general-purpose CPU.</p></div>
+        <a class="source-link mono" href="https://www.sega.jp/history/hard/dreamcast/" target="_blank" rel="noreferrer">SOURCE: SEGA HARDWARE ARCHIVE ↗</a>
+      </section>
+
+      <section class="page" data-page="vmu" hidden aria-label="Visual Memory Unit">
+        <span class="eyebrow">04 / A CONSOLE IN YOUR MEMORY CARD</span><h1 class="section-title">48 × 32.<br><em>Infinite joy.</em></h1>
+        <p class="body-copy">A screen. A processor. A tiny speaker. The VMU was a second screen you could put in your pocket.</p>
+        <div class="vmu-specs mono"><span><b>8-BIT</b>LC86K87</span><span><b>128 KB</b>FLASH</span><span><b>1-BIT</b>LCD</span></div>
+        <div class="game-info"><span class="eyebrow">SPIRAL RUN / A POCKET HOMEBREW</span><p>Catch the dreams. Dodge the static.</p><div class="game-stats mono"><span>SCORE <b id="game-score">000</b></span><span>BEST <b id="game-best">000</b></span><span id="game-state">READY</span></div><button class="primary" id="game-start">Start game <span>A</span></button><div class="game-controls"><button id="game-left" aria-label="Move left">←</button><span class="mono">← → / A D<br>OR TOUCH TO MOVE</span><button id="game-right" aria-label="Move right">→</button></div></div>
+        <p class="note mono">ORIGINAL BROWSER GAME · EXACT 48×32 PIXEL BUFFER<br>THE LCD FEEDS THE 3D MATERIAL IN REAL TIME.</p>
+        <a class="source-link mono" href="https://mc.pp.se/dc/vms/" target="_blank" rel="noreferrer">SOURCE: MARCUS COMSTEDT’S VMU DOCUMENTATION ↗</a>
+      </section>
+
+      <section class="page lab-page" data-page="lab" hidden aria-label="PowerVR2 graphics lab">
+        <span class="eyebrow">05 / THINK IN TILES</span><h1 class="section-title">Less waste.<br><em>More world.</em></h1>
+        <p class="body-copy">Explore original Dreamcast game geometry, then inspect how a tile-based renderer thinks.</p>
+        <div class="lab-demo-picker" role="group" aria-label="Choose a 3D demonstration">
+          <button class="selected" data-lab-demo="sonic" aria-pressed="true"><b>01</b>Sonic / 1998</button><button data-lab-demo="coast" aria-pressed="false"><b>02</b>Emerald Coast</button><button data-lab-demo="particles" aria-pressed="false"><b>03</b>Stress test</button>
+        </div>
+        <div class="lab-selected"><span class="mono" id="lab-demo-tag">ORIGINAL DREAMCAST MESH / SONIC ADVENTURE</span><h2 id="lab-demo-title">The real Dreamcast Sonic.</h2><p id="lab-demo-description">Extracted character geometry and textures from Sonic Adventure. Orbit the original low-poly silhouette or turn on wireframe to inspect its construction.</p></div>
+        <div class="lab-controls"><label class="mono">DRAW STYLE<select id="render-style"><option value="solid">PVR-INSPIRED / SOLID</option><option value="wire">GEOMETRY / WIREFRAME</option><option value="tiles">SCREEN TILES / 32×32</option></select></label><label id="object-control" class="mono" hidden>OBJECTS<span id="object-count">400</span><input id="object-slider" type="range" min="100" max="2400" step="100" value="400"></label></div>
+        <div class="lab-readout mono"><span><b id="live-fps">—</b>FPS</span><span><b id="live-triangles">—</b>TRI / FRAME</span><span><b id="live-calls">—</b>DRAW CALLS</span></div>
+        <div class="pvr-pipeline"><span class="mono">PVR2 / OPAQUE PATH</span><div class="pvr-stages" role="group" aria-label="PowerVR2 rendering stages"><button class="selected" data-pvr-stage="0" aria-pressed="true">01 / BIN</button><button data-pvr-stage="1" aria-pressed="false">02 / RESOLVE</button><button data-pvr-stage="2" aria-pressed="false">03 / SHADE</button><button data-pvr-stage="3" aria-pressed="false">04 / WRITE</button></div><p id="pvr-stage-detail">The Tile Accelerator groups submitted primitives into 32 × 32 pixel tile lists.</p></div>
+        <details class="pvr-details"><summary>Open the PowerVR2 engineering notes <span>↗</span></summary><div class="pvr-facts"><p><b>32 × 32 tiles.</b> A 640 × 480 frame maps to 20 × 15, or 300 tile positions. Geometry can be binned for the tiles it overlaps.</p><p><b>Visibility first.</b> For opaque geometry, hidden-surface removal runs before unnecessary texture fetches and shading. Transparent surfaces need different ordering.</p><p><b>Dedicated memory.</b> The Dreamcast has 8 MB of video RAM, separate from its 16 MB main RAM and 2 MB audio RAM. Tile-local work reduces external framebuffer traffic.</p><p><b>Published peaks.</b> Sega’s hardware outline lists 3 million polygons/s peak and 1.5 million visible polygons/s. Those are specification figures, not a real game’s frame budget.</p></div></details>
+        <p class="note">Sonic and the opening beach are extracted Dreamcast game assets, submitted by Spectro to The Models Resource; © Sega / Sonic Team. The crop, lighting and presentation were adapted for this independent fan tribute. This browser exhibit illustrates rendering concepts; it does not emulate PowerVR2. FPS, triangles and draw calls measure this browser only. Screen tiles are a visual overlay.</p>
+        <button class="text-button" id="compare-open">The numbers, in perspective <span>↗</span></button>
+        <div class="lab-sources"><a class="source-link mono" href="https://models.spriters-resource.com/dreamcast/sonicadventure/asset/293354/" target="_blank" rel="noreferrer">SONIC MESH / SPECTRO ↗</a><a class="source-link mono" href="https://models.spriters-resource.com/dreamcast/sonicadventure/asset/326421/" target="_blank" rel="noreferrer">EMERALD COAST / SPECTRO ↗</a><a class="source-link mono" href="https://www.sega.jp/history/hard/dreamcast/" target="_blank" rel="noreferrer">SEGA / SPECIFICATIONS ↗</a><a class="source-link mono" href="https://mc.pp.se/dc/pvr.html" target="_blank" rel="noreferrer">PVR2 REGISTER RESEARCH ↗</a><a class="source-link mono" href="https://www.imaginationtech.com/products/gpu/graphics-architecture/" target="_blank" rel="noreferrer">IMAGINATION / TBDR ↗</a></div>
+      </section>
+
+      <section class="page archive-page" data-page="archive" hidden aria-label="Technical archive">
+        <span class="eyebrow">06 / THE DREAM KEPT GOING</span><h1 class="section-title">End of an era.<br><em>Start of a scene.</em></h1>
+        <div class="archive-tabs" role="tablist" aria-label="Archive topics"><button role="tab" aria-selected="true" data-article="security">The loophole</button><button role="tab" aria-selected="false" data-article="homebrew">Homebrew</button><button role="tab" aria-selected="false" data-article="sound">The sound</button><button role="tab" aria-selected="false" data-article="myths">Myth / fact</button></div>
+        <article id="article" role="tabpanel"></article>
+      </section>
+      <section class="page collection-page" data-page="collection" hidden aria-label="Dreamcast game and homebrew collection">
+        <span class="eyebrow">07 / THE LIVING LIBRARY</span><h1 class="section-title">Icons &amp;<br><em>independents.</em></h1>
+        <p class="body-copy">A playable era, remembered through original cover art and an independent scene that keeps writing new chapters.</p>
+        <div class="collection-switch" role="group" aria-label="Collection category"><button data-kind="classic" class="selected" aria-pressed="true">Dreamcast games / 06</button><button data-kind="homebrew" aria-pressed="false">Homebrew / 04</button></div>
+        <div class="collection-card"><span class="mono" id="collection-index">01 / 06</span><h2 id="collection-title">Sonic Adventure</h2><span class="mono" id="collection-meta"></span><p id="collection-description"></p><p id="collection-technical" class="technical-note"></p></div>
+        <div class="collection-actions"><button class="pill" id="collection-prev" aria-label="Previous entry">←</button><button class="pill" id="collection-next" aria-label="Next entry">→</button><button class="text-button" id="collection-open" aria-pressed="false">Open jewel case ↗</button><button class="text-button" id="collection-more">Research &amp; images ↗</button></div>
+        <div class="collection-filmstrip" id="collection-filmstrip" aria-label="Select a collection entry"></div>
+        <p class="note mono">COVER SCANS / DEVELOPER IMAGES. SOURCES AND CREDITS ARE LISTED PER ENTRY. THE 3D CASE IS AN EDITORIAL RECREATION.</p>
+      </section>
+      <section class="page music-page" data-page="music" hidden aria-label="Dreamcast soundtrack jukebox">
+        <span class="eyebrow">08 / NOW PLAYING</span><h1 class="section-title">Press play.<br><em>Hear the dream.</em></h1>
+        <p class="body-copy">Eight defining tracks from the games. Pick a sleeve; the licensed release opens in the player below.</p>
+        <div class="music-now"><span class="mono" id="music-index">01 / 08 · SONIC ADVENTURE</span><h2 id="music-title">Open Your Heart</h2><p id="music-artist">Crush 40 · 1998</p><p id="music-note"></p></div>
+        <div class="music-list" id="music-list" aria-label="Choose a soundtrack"></div>
+        <div class="music-player" id="music-player"><div class="music-player-placeholder"><span class="music-play-icon">▷</span><span>Select a track to load its official stream.</span></div></div>
+        <div class="music-foot"><a id="music-source" class="source-link mono" target="_blank" rel="noreferrer">OPEN ON SPOTIFY ↗</a><p class="note mono">STREAMED FROM SPOTIFY · SOME REGIONS OR FULL TRACKS MAY REQUIRE A SPOTIFY ACCOUNT. PLAYER VOLUME IS CONTROLLED IN SPOTIFY.</p></div>
+      </section>
+    </main>
+
+    <aside class="model-label" id="model-label"><span class="model-line"></span><span class="mono" id="model-code">HKT-3000</span><strong id="model-name">Sega Dreamcast</strong><span class="model-hint mono" id="model-hint">DRAG TO ROTATE <span>↔</span> SCROLL TO ZOOM</span></aside>
+    <div class="scene-tools"><button class="round-button" id="rotate-toggle" aria-label="Pause automatic rotation" aria-pressed="true">Ⅱ</button><button class="round-button" id="reset-camera" aria-label="Reset camera">↺</button><button class="round-button" id="wire-toggle" aria-label="Toggle model wireframe" aria-pressed="false">◇</button></div>
+    <div class="tile-overlay" id="tile-overlay" hidden aria-hidden="true"></div>
+    <div class="bottom-bar"><span class="mono edition">1998 → <span id="current-year">2026</span><br>THE DREAM IS STILL ALIVE.</span><nav class="dock" aria-label="Exhibits"><button data-view="home" class="active" aria-current="page"><span class="nav-symbol">◉</span><span>The dream</span><small>01</small></button><button data-view="bios"><span class="nav-symbol">✣</span><span>BIOS</span><small>02</small></button><button data-view="hardware"><span class="nav-symbol">▱</span><span>Hardware</span><small>03</small></button><button data-view="vmu"><span class="nav-symbol">▣</span><span>VMU</span><small>04</small></button><button data-view="lab"><span class="nav-symbol">⌘</span><span>Scene lab</span><small>05</small></button><button data-view="archive"><span class="nav-symbol">⌁</span><span>Archive</span><small>06</small></button><button data-view="collection"><span class="nav-symbol">▥</span><span>Collection</span><small>07</small></button><button data-view="music"><span class="nav-symbol">♫</span><span>Music</span><small>08</small></button></nav><button class="credits-button mono" id="credits-open">DESIGNED & CODED<br>BY FELIPE ↗</button></div>
+  </div>
+
+  <dialog id="collection-dialog"><div class="dialog-top"><span class="eyebrow">THE LIVING LIBRARY</span><button class="close-dialog" aria-label="Close entry">×</button></div><div id="collection-dialog-content"></div></dialog>
+  <dialog id="settings-dialog"><div class="dialog-top"><span class="eyebrow">SYSTEM SETTINGS</span><button class="close-dialog" aria-label="Close settings">×</button></div><h2>Make yourself<br><em>at home.</em></h2><label class="setting-row">Display theme<select id="theme-setting"><option value="light">Original / ivory</option><option value="dark">After hours / charcoal</option></select></label><label class="setting-row">Spiral region<select id="spiral-setting"><option value="orange">Japan / North America · orange</option><option value="blue">Europe · blue</option></select></label><label class="setting-row">Render quality<select id="quality-setting"><option value="auto">Adaptive</option><option value="high">High / 2× pixel ratio</option><option value="low">Performance / 1× pixel ratio</option></select></label><label class="setting-row">Motion<input id="motion-setting" type="checkbox" checked role="switch" aria-label="Enable animation"></label><label class="setting-row">CRT scanlines<input id="crt-setting" type="checkbox" role="switch" aria-label="Enable CRT scanlines"></label><label class="setting-row">Menu volume<input id="volume-setting" type="range" min="0" max="100" value="45" aria-label="Menu volume"></label><button class="primary wide" id="replay-boot">Replay the boot sequence <span>↺</span></button><p class="note mono">PREFERENCES ARE SAVED IN THIS BROWSER.</p></dialog>
+  <dialog id="compare-dialog"><div class="dialog-top"><span class="eyebrow">A GENERATIONAL LEAP</span><button class="close-dialog" aria-label="Close comparison">×</button></div><h2>Context beats<br><em>clock speed.</em></h2><p>Four years separated the Saturn and Dreamcast. These are hardware specifications, not equivalent measures of game performance.</p><div class="comparison"><div class="comparison-row"><span></span><b>Saturn / 1994</b><b>Dreamcast / 1998</b></div><div class="comparison-row"><span>Main CPU</span><b>2 × SH-2</b><b>1 × SH-4</b></div><div class="comparison-row"><span>CPU clock</span><b>28.6 MHz each</b><b>200 MHz</b></div><div class="comparison-row"><span>Work RAM</span><b>2 MB</b><b>16 MB</b></div><div class="comparison-row"><span>Graphics</span><b>VDP1 + VDP2</b><b>PowerVR2</b></div></div><div class="memory-bars"><span class="mono">MAIN MEMORY / SAME SCALE</span><div><span>Saturn</span><i style="--bar:12.5%"></i><b>2 MB</b></div><div><span>Dreamcast</span><i style="--bar:100%"></i><b>16 MB</b></div></div><p class="note">7× the clock of one SH-2 and 8× the work RAM do not mean 7× or 8× the performance. Architecture, dual-CPU coordination, bandwidth and workload all matter. The SH-4’s published 1.4 GFLOPS is a theoretical peak, not a frame-rate guarantee.</p><a class="source-link mono" href="https://www.sega.jp/history/hard/segasaturn/index.html" target="_blank" rel="noreferrer">SEGA: SATURN ↗</a> <a class="source-link mono" href="https://www.sega.jp/history/hard/dreamcast/" target="_blank" rel="noreferrer">SEGA: DREAMCAST ↗</a></dialog>
+  <dialog id="credits-dialog"><div class="dialog-top"><span class="eyebrow">ABOUT THIS LITTLE DREAM</span><button class="close-dialog" aria-label="Close credits">×</button></div><h2>Built with love.<br><em>And polygons.</em></h2><p>Designed and coded by <strong>Felipe</strong>. An independent portfolio experiment celebrating the Sega Dreamcast.</p><div class="credit-stack mono">WEBGL 2 / THREE.JS<br>PROCEDURAL 3D GEOMETRY<br>GLSL / INSTANCED RENDERING<br>WEB AUDIO / CANVAS TEXTURES<br>HTML / CSS / JAVASCRIPT</div><p>Models and boot visuals are original browser recreations. The interior is a schematic exhibit, not a service diagram. Spiral Run is an original minigame, not VMU emulation.</p><p class="note">Dreamcast and Sega are trademarks of Sega Corporation. Original BIOS audio © Sega. Audio archive: The Sounds Resource; uploaded by Ultimate NitroZ, contributor dashiznit. This is an unofficial fan tribute.</p><a class="source-link mono" href="https://sounds.spriters-resource.com/dreamcast/systembios/asset/410755/" target="_blank" rel="noreferrer">BIOS AUDIO ARCHIVE ↗</a><a class="source-link mono" href="./vendor/LICENSE" target="_blank">THREE.JS / MIT LICENSE ↗</a></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
