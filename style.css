@@ -30,3 +30,40 @@ dialog{width:min(520px,90vw);max-height:88dvh;border:1px solid var(--line);borde
 @media(max-height:820px) and (min-width:801px){.lab-page{top:16%!important;max-height:calc(100vh - 235px)}.lab-page .section-title{font-size:47px}.lab-demo-picker{margin:12px 0 8px}.lab-page .lab-readout{margin:8px 0}}
 @media(max-width:800px){.lab-page{width:84%!important;max-width:none!important;top:auto!important;max-height:none;overflow:visible;padding-right:0}.lab-page .section-title{font-size:54px}.lab-demo-picker{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.lab-demo-picker button{min-height:48px}.lab-selected h2{font-size:23px}.lab-selected p,.pvr-facts p{font-size:12px}.pvr-stages button{font-size:7px;padding:8px 3px}.lab-page>.note{font-size:10px}}
 .lab-demo-picker{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lab-zoom{padding:10px 0;border-bottom:1px solid var(--line)}.lab-zoom>span{display:flex;justify-content:space-between;font-size:8px;color:var(--muted)}.lab-zoom output{color:var(--accent)}.lab-zoom>div{display:flex;gap:8px;align-items:center;margin:8px 0 5px}.lab-zoom input{flex:1;width:auto;margin:0;accent-color:var(--accent)}.lab-zoom button{width:30px;height:28px;border:1px solid var(--line);border-radius:3px;background:var(--glass);font-size:17px;line-height:1}.lab-zoom button:hover{border-color:var(--accent);color:var(--accent)}.lab-zoom small{font-size:7px;color:var(--muted)}
+/* Three cartridges in the VMU pocket arcade. */
+.vmu-game-picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:15px}
+.vmu-game-picker button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:60px;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--glass);text-align:left;transition:border-color .2s,background .2s,transform .2s}
+.vmu-game-picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.vmu-game-picker button.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--glass))}
+.vmu-game-picker b{font-family:var(--mono);font-size:7px;font-weight:400;color:var(--accent)}
+.vmu-game-picker span{font-size:11px;margin-top:5px;white-space:nowrap;color:var(--ink)}
+.vmu-game-picker small{font-family:var(--mono);font-size:6px;letter-spacing:.08em;color:var(--muted);margin-top:3px}
+@media(max-width:420px){.vmu-game-picker{gap:4px}.vmu-game-picker button{padding:7px;min-height:55px}.vmu-game-picker span{font-size:10px}}
+@media(min-width:801px){.page[data-page=vmu]{top:17%;max-height:calc(100vh - 245px);overflow-y:auto;padding-right:12px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}}
+@media(max-width:800px){.page[data-page=vmu]{max-height:none;overflow:visible;padding-right:0}}
+/* Gallery typography: prioritize the model and keep the technical copy readable. */
+.lab-demo-picker button{font-size:10px;line-height:1.25;transition:border-color .2s,background .2s,transform .2s}
+.lab-demo-picker button:hover{transform:translateY(-2px)}
+.lab-selected h2{font-size:23px}.lab-selected p{font-size:11px;line-height:1.6}
+.lab-page .source-link{font-size:8px}.lab-page>.note{font-size:10px}
+@media(max-width:800px){.lab-demo-picker button{font-size:11px}.lab-selected p{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.lab-demo-picker button{transition:none}.lab-demo-picker button:hover{transform:none}}
+/* Immersive model archive */
+#exhibit-open{position:fixed;right:6%;top:17%;z-index:8;border:1px solid var(--accent);background:var(--panel);padding:11px 15px;border-radius:4px;color:var(--accent);font:9px var(--mono);letter-spacing:.1em}
+#exhibit{position:fixed;inset:0;z-index:9;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,transparent 15%,rgba(9,13,15,.29) 78%)}
+#exhibit .exhibit-head{position:absolute;top:28px;left:6%;right:6%;display:flex;justify-content:space-between;align-items:center;color:var(--ink);font-size:9px}
+#exhibit button{pointer-events:auto;border:1px solid var(--line);background:var(--panel);padding:11px 15px;border-radius:4px;font:10px var(--mono)}
+.exhibit-caption{position:absolute;left:6%;bottom:8%;max-width:450px}.exhibit-caption h2{font-size:clamp(27px,3vw,44px);margin:7px 0 12px}.exhibit-caption p{background:var(--panel);border-left:2px solid var(--accent);padding:12px 15px;font-size:12px;line-height:1.6;margin-top:12px;color:var(--ink)}
+body.exhibit-mode .page,body.exhibit-mode .bottom-bar,body.exhibit-mode .scene-meta,body.exhibit-mode .model-label,body.exhibit-mode .scene-tools,body.exhibit-mode header,body.exhibit-mode #exhibit-open{display:none!important}
+body.exhibit-mode #orbit-zone{position:fixed;inset:0;z-index:8;width:100%;height:100%;pointer-events:auto}
+.vmu-pocket{display:none}
+@media(max-width:800px){#exhibit-open{top:125px;right:8%;font-size:8px}#exhibit .exhibit-head{top:24px}.exhibit-caption{bottom:5%;left:8%;right:8%}.exhibit-caption h2{font-size:30px}.exhibit-caption p{font-size:11px}.vmu-pocket{display:flex;flex-direction:column;gap:8px;background:linear-gradient(155deg,#e2e3d9,#9da79f);color:#304b3c;border:8px solid #d2d6ce;box-shadow:0 12px 32px #0005,inset 0 0 0 1px #fff8;border-radius:16px;padding:18px;margin:20px 0 24px;align-items:center}.vmu-pocket canvas{display:block;width:min(100%,288px);aspect-ratio:3/2;image-rendering:pixelated;border:7px solid #485950;background:#9bad8e;box-shadow:inset 0 0 14px #192b20}.vmu-pocket small{font-size:7px;text-align:center}}
+@media(prefers-reduced-motion:no-preference){.page.active{animation:page-enter .45s ease-out both}@keyframes page-enter{from{opacity:.3;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}}
+/* BIOS-inspired edge light, kept away from the 3D subject and controls. */
+.ambient-depth{position:fixed;inset:0;z-index:1;pointer-events:none;--aura:230,82,36;background:radial-gradient(ellipse 35% 48% at 95% 13%,rgba(var(--aura),.11),transparent 80%),radial-gradient(ellipse 43% 45% at 0% 95%,rgba(var(--aura),.07),transparent 82%);mix-blend-mode:screen;transition:opacity .7s,filter .7s;opacity:.8}
+body[data-view=bios] .ambient-depth{--aura:226,92,50;opacity:1}body[data-view=vmu] .ambient-depth{--aura:92,180,143;opacity:.65}body[data-view=lab] .ambient-depth{--aura:80,137,188;opacity:.72}body[data-view=archive] .ambient-depth,body[data-view=music] .ambient-depth{--aura:230,100,54;opacity:.55}body[data-view=collection] .ambient-depth{--aura:156,131,195;opacity:.5}
+body:not(.dark) .ambient-depth{mix-blend-mode:multiply;opacity:.18}body.exhibit-mode .ambient-depth{opacity:.32}
+.model-label[role=button]{cursor:pointer}.model-label[role=button]:hover #model-code{color:var(--accent)}
+@media(max-width:800px){.ambient-depth{background:radial-gradient(ellipse 75% 38% at 95% 8%,rgba(var(--aura),.11),transparent 80%),radial-gradient(ellipse 75% 44% at 3% 90%,rgba(var(--aura),.06),transparent 82%)}}
+.model-label[role=button]{pointer-events:auto}

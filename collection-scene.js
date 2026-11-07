@@ -26,7 +26,7 @@ function caseModel(low){
 }
 export class CollectionScene{
  constructor(root,entries,low){this.entries=entries;this.group=new THREE.Group();root.add(this.group);this.cases=[caseModel(low),caseModel(low),caseModel(low)];this.cases.forEach(c=>this.group.add(c.root));this.index=0;this.open=0;this.target=0;this.select(0);}
- select(index){this.index=(index+this.entries.length)%this.entries.length;this.target=0;this.cases.forEach((c,i)=>artTexture(this.entries[(this.index+i-1+this.entries.length)%this.entries.length],c.tex));}
+ select(index){this.index=(index+this.entries.length)%this.entries.length;this.target=0;const category=this.entries.filter(entry=>entry.kind===this.entries[this.index].kind);const position=category.indexOf(this.entries[this.index]);this.cases.forEach((c,i)=>artTexture(category[(position+i-1+category.length)%category.length],c.tex));}
  setOpen(value){this.target=value?1:0;}
  update(dt,time){this.open=THREE.MathUtils.lerp(this.open,this.target,Math.min(1,dt*5));this.cases.forEach((c,i)=>{const offset=i-1,main=i===1;c.root.visible=main||this.open<.75;c.root.position.set(offset*2.05,main?.12:0,main?.50:-1.1);c.root.scale.setScalar(main?1:.67*(1-this.open*.3));c.root.rotation.set(.04,main?-.11:-offset*.38,main?Math.sin(time*.35)*.025:offset*.09);c.hinge.rotation.y=main?-this.open*1.14:0;if(main)c.rotor.rotation.z+=dt*.11;});}
 }

@@ -42,7 +42,7 @@ export class SoftwareRenderer {
           if(Math.max(ax,bx,cx)<view.x||Math.min(ax,bx,cx)>view.x+view.w||Math.max(ay,by,cy)<view.y||Math.min(ay,by,cy)>view.y+view.h)continue;
           let shade=1;if(!material.isMeshBasicMaterial&&norm){this.n.fromBufferAttribute(norm,ai).applyNormalMatrix(this.normal);if(area>=0)this.n.negate();shade=.64+Math.max(0,this.n.dot(this.light))*.52;}
           this.c.copy(color).multiplyScalar(shade);if(material.iridescence){const hue=((ax+ay)*.0007+this.n.x*.16+.25)%1;const rainbow=new THREE.Color().setHSL(hue,.30,.69);this.c.lerp(rainbow,.5);}
-          const texture=image&&uv?{pixels:this.texturePixels(material.map),uv:[uv.getX(ai),uv.getY(ai),uv.getX(bi),uv.getY(bi),uv.getX(ci),uv.getY(ci)]}:null;
+          const texture=image&&uv?{pixels:this.texturePixels(material.map),flipY:material.map.flipY,uv:[uv.getX(ai),uv.getY(ai),uv.getX(bi),uv.getY(bi),uv.getX(ci),uv.getY(ci)]}:null;
           const srgb=this.c.clone().convertLinearToSRGB();
           faces.push({z,zs:[verts[a+2],verts[b+2],verts[c+2]],p:[ax,ay,bx,by,cx,cy],color:this.c.getStyle(),rgb:[Math.round(Math.min(1,srgb.r)*255),Math.round(Math.min(1,srgb.g)*255),Math.round(Math.min(1,srgb.b)*255)],opacity,depthWrite:material.depthWrite!==false,wire:material.wireframe,texture});
         }
@@ -71,13 +71,13 @@ export class SoftwareRenderer {
       let w0=a0*(minX+.5)+b0*(y+.5)+c0,w1=a1*(minX+.5)+b1*(y+.5)+c1;
       for(let x=minX;x<=maxX;x++,w0+=a0,w1+=a1){const w2=1-w0-w1;if(w0<-.00001||w1<-.00001||w2<-.00001)continue;const index=y*W+x,z=w0*zs[0]+w1*zs[1]+w2*zs[2];if(z>depth[index]+.000002)continue;
         let red=face.rgb[0],green=face.rgb[1],blue=face.rgb[2],alpha=face.opacity;
-        if(tex){const u=Math.max(0,Math.min(tex.width-1,Math.floor((w0*uv[0]+w1*uv[2]+w2*uv[4])*tex.width))),vv=Math.max(0,Math.min(tex.height-1,Math.floor((1-w0*uv[1]-w1*uv[3]-w2*uv[5])*tex.height))),i=(vv*tex.width+u)*4;alpha*=tex.pixels[i+3]/255;if(alpha<.01)continue;red=tex.pixels[i]*red/255;green=tex.pixels[i+1]*green/255;blue=tex.pixels[i+2]*blue/255;}
+        if(tex){const u=Math.max(0,Math.min(tex.width-1,Math.floor((w0*uv[0]+w1*uv[2]+w2*uv[4])*tex.width))),v=w0*uv[1]+w1*uv[3]+w2*uv[5],vv=Math.max(0,Math.min(tex.height-1,Math.floor((texture.flipY?1-v:v)*tex.height))),i=(vv*tex.width+u)*4;alpha*=tex.pixels[i+3]/255;if(alpha<.01)continue;red=tex.pixels[i]*red/255;green=tex.pixels[i+1]*green/255;blue=tex.pixels[i+2]*blue/255;}
         const dest=index*4;if(alpha>.995){data[dest]=red;data[dest+1]=green;data[dest+2]=blue;data[dest+3]=255;}else{const oldAlpha=data[dest+3]/255,outAlpha=alpha+oldAlpha*(1-alpha),mix=oldAlpha*(1-alpha);data[dest]=(red*alpha+data[dest]*mix)/outAlpha;data[dest+1]=(green*alpha+data[dest+1]*mix)/outAlpha;data[dest+2]=(blue*alpha+data[dest+2]*mix)/outAlpha;data[dest+3]=outAlpha*255;}if(face.depthWrite)depth[index]=z;
       }
     }
   }
   textureTriangle(texture,p){
-    const {image,uv}=texture,c=this.context;const w=image.width,h=image.height;if(!w||!h)return;const u0=uv[0]*w,v0=(1-uv[1])*h,u1=uv[2]*w,v1=(1-uv[3])*h,u2=uv[4]*w,v2=(1-uv[5])*h;
+    const {image,uv,flipY}=texture,c=this.context;const w=image.width,h=image.height;if(!w||!h)return;const texV=v=>(flipY?1-v:v)*h;const u0=uv[0]*w,v0=texV(uv[1]),u1=uv[2]*w,v1=texV(uv[3]),u2=uv[4]*w,v2=texV(uv[5]);
     const den=u0*(v1-v2)+u1*(v2-v0)+u2*(v0-v1);if(Math.abs(den)<.00001)return;
     const a=(p[0]*(v1-v2)+p[2]*(v2-v0)+p[4]*(v0-v1))/den,b=(p[1]*(v1-v2)+p[3]*(v2-v0)+p[5]*(v0-v1))/den;
     const cc=(p[0]*(u2-u1)+p[2]*(u0-u2)+p[4]*(u1-u0))/den,d=(p[1]*(u2-u1)+p[3]*(u0-u2)+p[5]*(u1-u0))/den;
